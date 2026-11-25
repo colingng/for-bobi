@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A little question 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Colors (change these to restyle the whole page) ---------- */
+    :root {
+      --bg: #fff0f5;
+      --pink: #ff6b9d;
+      --pink-dark: #e84a80;
+      --text: #5a2a3c;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 16px;
+      touch-action: manipulation;
+    }
+
+    /* Floating hearts in the background */
+    .heart-bg {
+      position: fixed;
+      bottom: -40px;
+      font-size: 24px;
+      opacity: 0.6;
+      animation: floatUp linear forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      to { transform: translateY(-110vh) rotate(30deg); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 40px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(255, 107, 157, 0.25);
+    }
+
+    .emoji { font-size: 72px; margin-bottom: 12px; }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-weight: normal;
+      font-size: 30px;
+      color: var(--pink);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    p { font-size: 17px; margin-bottom: 28px; }
+
+    /* Empty space in the card where the buttons start out */
+    .buttons { height: 60px; }
+
+    button {
+      position: fixed;
+      z-index: 3;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 32px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #yesBtn {
+      background: var(--pink);
+      color: white;
+      box-shadow: 0 4px 14px rgba(255, 107, 157, 0.4);
+    }
+    #yesBtn:hover { background: var(--pink-dark); }
+
+    /* Yes glows once it gives up and comes to her */
+    #yesBtn.coming { animation: glow 0.8s ease-in-out infinite alternate; }
+    @keyframes glow {
+      to { box-shadow: 0 0 28px rgba(255, 107, 157, 0.9); }
+    }
+
+    #noBtn {
+      background: #f1e4ea;
+      color: var(--text);
+    }
+
+    .hidden { display: none; }
+
+    /* Falling confetti after "Yes" */
+    .confetti {
+      position: fixed;
+      top: -40px;
+      font-size: 26px;
+      pointer-events: none;
+      animation: fall linear forwards;
+      z-index: 2;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Screen 1: the question ===== -->
+  <div class="card" id="askScreen">
+    <div class="emoji" id="askEmoji">🥺</div>
+    <h1>Will you go on a date with me?</h1>
+    <p id="subtitle">Catch the right answer 💕</p>
+    <div class="buttons" id="buttonSpot"></div>
+  </div>
+  <button id="yesBtn">Yes!</button>
+  <button id="noBtn">No</button>
+
+  <!-- ===== Screen 2: after she says yes (edit this part later!) ===== -->
+  <div class="card hidden" id="yesScreen">
+    <div class="emoji">🥰</div>
+    <h1>Yay!!! It's a date!</h1>
+    <p>You just made my whole day. Details coming soon 😉</p>
+  </div>
+
+  <script>
+    // ---------- Settings you can tweak ----------
+    const FLEE_RADIUS = 110;    // how close (pixels) her cursor can get before a button runs
+    const YES_SPEED   = 6;      // how fast Yes dodges (lower = easier to catch)
+    const NO_SPEED    = 12;     // how fast No dodges
+    const CHASE_TIME  = 10000;  // milliseconds (10 s) before Yes gives up and comes to her
+
+    const noTexts = ['No', 'Nope!', 'Too slow!', 'Catch me 😜', 'Not today!',
+                     'Try Yes instead', 'Hehe 🙈'];
+    const emojis  = ['🥺', '😳', '😜', '🥹', '😏', '🙈', '😆'];
+
+    // ---------- Setup ----------
+    const yesEl = document.getElementById('yesBtn');
+    const noEl  = document.getElementById('noBtn');
+    const pointer = { x: -9999, y: -9999, seen: false };  // where her cursor/finger is
+    const yes = { el: yesEl, x: 0, y: 0 };                // x, y = button center
+    const no  = { el: noEl,  x: 0, y: 0, wasFleeing: false };
+    let yesComes = false;   // flips to true after CHASE_TIME
+    let done = false;       // true once she clicks Yes
+    let noTextIndex = 0;
+
+    // Put both buttons side by side inside the card to start
+    function startPositions() {
+      const spot = document.getElementById('buttonSpot').getBoundingClientRect();
+      const midX = spot.left + spot.width / 2;
+      const midY = spot.top + spot.height / 2;
+      yes.x = midX - 70; yes.y = midY;
+      no.x  = midX + 70; no.y  = midY;
+    }
+
+    // Draw a button at its x, y
+    function draw(b) {
+      b.el.style.left = (b.x - b.el.offsetWidth / 2) + 'px';
+      b.el.style.top  = (b.y - b.el.offsetHeight / 2) + 'px';
+    }
+
+    // Keep a button inside the screen
+    function keepOnScreen(b) {
+      const halfW = b.el.offsetWidth / 2 + 12;
+      const halfH = b.el.offsetHeight / 2 + 12;
+      b.x = Math.min(Math.max(b.x, halfW), window.innerWidth - halfW);
+      b.y = Math.min(Math.max(b.y, halfH), window.innerHeight - halfH);
+    }
+
+    function distanceToPointer(b) {
+      return Math.hypot(b.x - pointer.x, b.y - pointer.y);
+    }
+
+    // Jump to a random spot far away from her cursor
+    function teleport(b) {
+      for (let i = 0; i < 30; i++) {
+        b.x = Math.random() * window.innerWidth;
+        b.y = Math.random() * window.innerHeight;
+        keepOnScreen(b);
+        if (distanceToPointer(b) > FLEE_RADIUS * 2.5) break;
+      }
+    }
+
+    // Step a button away from her cursor. Returns true if it's running.
+    function flee(b, speed) {
+      const dx = b.x - pointer.x;
+      const dy = b.y - pointer.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist > FLEE_RADIUS) return false;
+
+      if (dist < 1) { teleport(b); return true; }
+      b.x += (dx / dist) * speed;
+      b.y += (dy / dist) * speed;
+      keepOnScreen(b);
+
+      // Stuck in a corner? Escape to somewhere else.
+      if (distanceToPointer(b) < FLEE_RADIUS * 0.5) teleport(b);
+      return true;
+    }
+
+    function changeNoText() {
+      noTextIndex = (noTextIndex + 1) % noTexts.length;
+      noEl.textContent = noTexts[noTextIndex];
+      document.getElementById('askEmoji').textContent = emojis[noTextIndex];
+    }
+
+    // ---------- The animation loop (runs ~60 times per second) ----------
+    function tick() {
+      if (done) return;
+
+      // No: always runs away. Changes its text each time a new chase starts.
+      const noFleeing = flee(no, NO_SPEED);
+      if (noFleeing && !no.wasFleeing) changeNoText();
+      no.wasFleeing = noFleeing;
+
+      if (!yesComes) {
+        flee(yes, YES_SPEED);               // Yes dodges too, but slower
+      } else {
+        // Yes gives up and glides toward her cursor (or the middle of the screen)
+        const targetX = pointer.seen ? pointer.x : window.innerWidth / 2;
+        const targetY = pointer.seen ? pointer.y : window.innerHeight / 2;
+        yes.x += (targetX - yes.x) * 0.06;
+        yes.y += (targetY - yes.y) * 0.06;
+      }
+
+      keepOnScreen(yes);
+      keepOnScreen(no);
+      draw(yes);
+      draw(no);
+      requestAnimationFrame(tick);
+    }
+
+    // Start the 10-second timer the first time she moves or taps
+    let timerStarted = false;
+    function startTimer() {
+      if (timerStarted) return;
+      timerStarted = true;
+      setTimeout(() => {
+        yesComes = true;
+        yesEl.classList.add('coming');
+        document.getElementById('subtitle').textContent = "Okay fine, I'll come to you 🥰";
+      }, CHASE_TIME);
+    }
+
+    // ---------- Tracking her cursor / finger ----------
+    function updatePointer(x, y) {
+      pointer.x = x; pointer.y = y; pointer.seen = true;
+      startTimer();
+    }
+
+    window.addEventListener('mousemove', e => updatePointer(e.clientX, e.clientY));
+
+    // On a phone there's no hover, so when she taps near a button it jumps away
+    // instantly, before the tap can "land" on it.
+    window.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      updatePointer(t.clientX, t.clientY);
+      if (distanceToPointer(no) < FLEE_RADIUS) { teleport(no); changeNoText(); }
+      if (!yesComes && distanceToPointer(yes) < FLEE_RADIUS) teleport(yes);
+    });
+    window.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      updatePointer(t.clientX, t.clientY);
+    });
+
+    // Safety net: if her mouse is fast enough to reach No, it still escapes
+    noEl.addEventListener('mouseover', () => { teleport(no); changeNoText(); });
+    noEl.addEventListener('click', e => { e.preventDefault(); teleport(no); changeNoText(); });
+
+    // ---------- She said yes! ----------
+    yesEl.addEventListener('click', () => {
+      done = true;
+      document.getElementById('askScreen').classList.add('hidden');
+      document.getElementById('yesScreen').classList.remove('hidden');
+      yesEl.remove();
+      noEl.remove();
+      launchConfetti();
+    });
+
+    function launchConfetti() {
+      const pieces = ['💖', '💕', '🎉', '✨', '💗', '🌸'];
+      for (let i = 0; i < 60; i++) {
+        setTimeout(() => {
+          const c = document.createElement('div');
+          c.className = 'confetti';
+          c.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+          c.style.left = Math.random() * 100 + 'vw';
+          c.style.animationDuration = 2 + Math.random() * 2 + 's';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 4500);
+        }, i * 50);
+      }
+    }
+
+    // Gentle floating hearts in the background, forever
+    setInterval(() => {
+      const h = document.createElement('div');
+      h.className = 'heart-bg';
+      h.textContent = '💗';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = 6 + Math.random() * 4 + 's';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 10000);
+    }, 700);
+
+    // Go!
+    window.addEventListener('load', () => {
+      startPositions();
+      requestAnimationFrame(tick);
+    });
+  </script>
+</body>
+</html>
