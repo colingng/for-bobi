@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept 1 – Love Letter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px 16px;
+      background:
+        radial-gradient(circle at 20% 10%, #fbf6ee 0%, transparent 60%),
+        #efe4d3;
+      font-family: 'Cormorant Garamond', serif;
+      color: #3b2a22;
+    }
+    .letter {
+      position: relative;
+      width: 100%; max-width: 400px;
+      background: #fffdf8;
+      padding: 48px 36px 56px;
+      transform: rotate(-1.2deg);
+      box-shadow: 0 1px 0 #e8dccb, 0 18px 40px rgba(80, 50, 30, 0.18);
+      background-image: repeating-linear-gradient(transparent 0 33px, #efe6d8 33px 34px);
+    }
+    .seal {
+      position: absolute; top: -26px; right: 28px;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #c0392b, #8e1f16);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      display: grid; place-items: center;
+      color: #f5d6cf; font-family: 'Caveat', cursive; font-size: 26px;
+    }
+    .dear { font-family: 'Caveat', cursive; font-size: 30px; margin-bottom: 14px; }
+    .body { font-size: 20px; line-height: 34px; margin-bottom: 18px; }
+    h1 {
+      font-style: italic; font-weight: 500;
+      font-size: 34px; line-height: 1.2; color: #8e1f16;
+      margin: 10px 0 30px;
+    }
+    .buttons { display: flex; gap: 24px; align-items: center; }
+    .yes {
+      font-family: inherit; font-size: 20px; font-style: italic;
+      background: #8e1f16; color: #fffdf8; border: none;
+      padding: 10px 34px; border-radius: 2px; cursor: pointer;
+    }
+    .no {
+      font-family: inherit; font-size: 18px; background: none; border: none;
+      color: #8a7466; text-decoration: underline; cursor: pointer;
+    }
+    .sign { font-family: 'Caveat', cursive; font-size: 26px; margin-top: 34px; text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="letter">
+    <div class="seal">C</div>
+    <p class="dear">Dear you,</p>
+    <p class="body">I've been meaning to ask you something, and I wanted to do it properly.</p>
+    <h1>Will you go on a date with me?</h1>
+    <div class="buttons">
+      <button class="yes">Yes</button>
+      <button class="no">No</button>
+    </div>
+    <p class="sign">— me</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Concepts</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, system-ui, sans-serif; background: #f6f6f4; color: #222; padding: 32px 16px; }
+    h1 { font-size: 22px; text-align: center; margin-bottom: 6px; }
+    .sub { text-align: center; color: #666; margin-bottom: 28px; font-size: 15px; }
+    .grid { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; }
+    .item { width: 390px; max-width: 100%; }
+    .item h2 { font-size: 17px; margin-bottom: 4px; }
+    .item p { font-size: 14px; color: #555; margin-bottom: 10px; line-height: 1.4; min-height: 40px; }
+    iframe { width: 100%; height: 720px; border: 1px solid #ddd; border-radius: 28px; background: #fff; }
+  </style>
+</head>
+<body>
+  <h1>Three looks for the date page</h1>
+  <p class="sub">Each frame is phone-sized, since that's probably how she'll open it.</p>
+  <div class="grid">
+    <div class="item">
+      <h2>1. Love Letter</h2>
+      <p>Romantic and grown-up. Cream paper, a wax seal, handwritten touches. The chase becomes a surprise.</p>
+      <iframe src="1-love-letter.html"></iframe>
+    </div>
+    <div class="item">
+      <h2>2. Arcade</h2>
+      <p>Playful, like a game. The 10-second timer becomes a real countdown on screen. Best fit for the chase.</p>
+      <iframe src="2-arcade.html"></iframe>
+    </div>
+    <div class="item">
+      <h2>3. Scrapbook</h2>
+      <p>Personal and cute. Polaroid frames ready for your photos and GIFs later.</p>
+      <iframe src="3-scrapbook.html"></iframe>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept 3 – Scrapbook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px 16px;
+      background-color: #f4ede2;
+      background-image: radial-gradient(#ddd0bc 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      font-family: 'Patrick Hand', cursive;
+      color: #33302b;
+    }
+    .board { position: relative; width: 100%; max-width: 400px; height: 620px; }
+    .polaroid {
+      position: absolute; background: #fff; padding: 10px 10px 34px;
+      box-shadow: 0 6px 18px rgba(60, 45, 30, 0.18);
+    }
+    .polaroid .photo {
+      width: 150px; height: 150px; background: #e7e1d8;
+      display: grid; place-items: center; text-align: center;
+      font-size: 14px; color: #9b9184;
+    }
+    .polaroid .caption { font-family: 'Caveat', cursive; font-size: 20px; text-align: center; margin-top: 6px; }
+    .p1 { top: 10px; left: 4px; transform: rotate(-6deg); }
+    .p2 { top: 40px; right: 4px; transform: rotate(5deg); }
+    .tape {
+      position: absolute; top: -12px; left: 50%; width: 70px; height: 22px;
+      transform: translateX(-50%) rotate(-3deg);
+      background: rgba(250, 214, 165, 0.75);
+    }
+    .note {
+      position: absolute; top: 250px; left: 50%; transform: translateX(-50%) rotate(-1.5deg);
+      width: 300px; background: #fff7b8; padding: 28px 22px 26px;
+      box-shadow: 0 8px 20px rgba(60, 45, 30, 0.18); text-align: center;
+    }
+    .note h1 { font-family: 'Caveat', cursive; font-weight: 700; font-size: 40px; line-height: 1.05; margin-bottom: 22px; }
+    .buttons { display: flex; gap: 14px; justify-content: center; }
+    button {
+      font-family: 'Patrick Hand', cursive; font-size: 22px; cursor: pointer;
+      padding: 6px 26px; border-radius: 999px; border: 2px dashed transparent;
+    }
+    .yes { background: #ff7a6b; color: #fff; transform: rotate(-3deg); box-shadow: 0 3px 0 #d65a4c; }
+    .no  { background: #fff; color: #6d665c; border-color: #bdb3a4; transform: rotate(2deg); }
+    .doodle {
+      position: absolute; bottom: 20px; right: 22px;
+      font-family: 'Caveat', cursive; font-size: 22px; color: #c2553f; transform: rotate(-4deg);
+    }
+    .doodle svg { vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <div class="board">
+    <div class="polaroid p1"><div class="tape"></div><div class="photo">your photo<br>or GIF here</div><p class="caption">us, probably</p></div>
+    <div class="polaroid p2"><div class="tape"></div><div class="photo">your photo<br>or GIF here</div><p class="caption">best day</p></div>
+    <div class="note">
+      <h1>Will you go on a date with me?</h1>
+      <div class="buttons">
+        <button class="yes">yes</button>
+        <button class="no">no</button>
+      </div>
+    </div>
+    <p class="doodle">
+      <svg width="26" height="24" viewBox="0 0 26 24" fill="none" stroke="#c2553f" stroke-width="2.2" stroke-linecap="round">
+        <path d="M13 21C5 15 2 11 2 7a5 5 0 0 1 11-2 5 5 0 0 1 11 2c0 4-3 8-11 14z"/>
+      </svg>
+      pick wisely
+    </p>
+  </div>
+</body>
+</html>

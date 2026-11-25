@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept 2 – Arcade</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px 16px;
+      background-color: #fdf3e1;
+      background-image:
+        linear-gradient(#f3e4c8 1px, transparent 1px),
+        linear-gradient(90deg, #f3e4c8 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: 'Press Start 2P', monospace;
+      color: #2d2a4a;
+      text-align: center;
+    }
+    .screen {
+      width: 100%; max-width: 400px;
+      background: #fffaf0;
+      border: 4px solid #2d2a4a;
+      box-shadow: 8px 8px 0 #2d2a4a;
+      padding: 28px 20px 32px;
+    }
+    .hud { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 28px; }
+    .hud .time { color: #e4572e; }
+    /* Pixel-art heart drawn with box-shadows (no images, no emoji) */
+    .pixel-heart {
+      width: 8px; height: 8px; margin: 0 auto 64px; transform: translateX(-28px);
+      box-shadow:
+        8px 0 #e4572e, 16px 0 #e4572e, 40px 0 #e4572e, 48px 0 #e4572e,
+        0 8px #e4572e, 8px 8px #e4572e, 16px 8px #e4572e, 24px 8px #e4572e, 32px 8px #e4572e, 40px 8px #e4572e, 48px 8px #e4572e, 56px 8px #e4572e,
+        0 16px #e4572e, 8px 16px #e4572e, 16px 16px #e4572e, 24px 16px #e4572e, 32px 16px #e4572e, 40px 16px #e4572e, 48px 16px #e4572e, 56px 16px #e4572e,
+        8px 24px #e4572e, 16px 24px #e4572e, 24px 24px #e4572e, 32px 24px #e4572e, 40px 24px #e4572e, 48px 24px #e4572e,
+        16px 32px #e4572e, 24px 32px #e4572e, 32px 32px #e4572e, 40px 32px #e4572e,
+        24px 40px #e4572e, 32px 40px #e4572e;
+    }
+    .label { font-size: 10px; color: #7a7499; margin-bottom: 14px; }
+    h1 { font-size: 16px; line-height: 1.8; margin-bottom: 32px; }
+    .buttons { display: flex; gap: 16px; justify-content: center; }
+    button {
+      font-family: inherit; font-size: 12px; cursor: pointer;
+      padding: 14px 20px; border: 3px solid #2d2a4a;
+      box-shadow: 4px 4px 0 #2d2a4a;
+    }
+    button:active { transform: translate(4px, 4px); box-shadow: none; }
+    .yes { background: #7bd389; color: #2d2a4a; }
+    .no  { background: #e6e1f0; color: #2d2a4a; }
+    .blink { margin-top: 28px; font-size: 9px; color: #7a7499; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="hud"><span>P2 READY</span><span class="time">TIME 10</span></div>
+    <div class="pixel-heart"></div>
+    <p class="label">NEW QUEST UNLOCKED</p>
+    <h1>WILL YOU GO ON A DATE WITH ME?</h1>
+    <div class="buttons">
+      <button class="yes">&gt; YES</button>
+      <button class="no">NO</button>
+    </div>
+    <p class="blink">CATCH THE RIGHT ANSWER</p>
+  </div>
+</body>
+</html>
